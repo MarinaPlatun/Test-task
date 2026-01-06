@@ -1,0 +1,15 @@
+# Use a specific OpenJDK base image for the Java Runtime Environment (JRE)
+# Using JRE only is more lightweight than the full JDK
+FROM eclipse-temurin:21_35-jre-alpine
+
+# Define an argument for the JAR file path
+ARG JAR_FILE=build/libs/*.jar
+
+# Copy the application JAR file into the container as app.jar
+COPY ${JAR_FILE} app.jar
+
+# Expose the port on which the Spring Boot app runs (default is 8080)
+EXPOSE 8080
+
+# Set the entry point command to run the application
+ENTRYPOINT ["java", "-jar", "/app.jar"]

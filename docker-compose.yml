@@ -1,0 +1,94 @@
+version: '3.8'
+services:
+  # 1. База данных (пример)
+  db:
+    build:
+      context: ./generatorOne
+      dockerfile: Dockerfile.postgres
+    image: 'postgres:latest'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: 'postgres'
+      POSTGRES_PASSWORD: 'root'
+      POSTGRES_USER: 'root'
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  # 2. Сервис Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0 # Use a specific version
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+  # 3. Сервис генератор событий один
+  generatorOne:
+    build:
+      context: ./generatorOne # Путь к папке с user-service (где находится pom.xml или build.gradle)
+      dockerfile: Dockerfile.service # Если используете отдельный Dockerfile
+    image: my-spring-generator-one/generator-one:latest # Имя образа
+    container_name: generator-one-container
+    ports:
+      - "8081:8080" # Проброс порта: хост:контейнер
+    environment:
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/postgres'
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'root'
+      SPRING_JPA_HIBERNATE_DDL_AUTO: 'update'
+  # 4. Сервис генератор событий два
+  generatorTwo:
+    build:
+      context: ./generatorTwo # Путь к папке с user-service (где находится pom.xml или build.gradle)
+      dockerfile: Dockerfile.service # Если используете отдельный Dockerfile
+    image: my-spring-app/generator-two:latest # Имя образа
+    container_name: generator-two-container
+    ports:
+      - "8082:8080" # Проброс порта: хост:контейнер
+    environment:
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/postgres'
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'root'
+      SPRING_JPA_HIBERNATE_DDL_AUTO: 'update'
+  # 5. Сервис регистратор
+  registrator:
+    build:
+      context: ./registrator # Путь к папке с user-service (где находится pom.xml или build.gradle)
+      dockerfile: Dockerfile.service # Если используете отдельный Dockerfile
+    image: my-spring-app/registrator:latest # Имя образа
+    container_name: registrator-container
+    ports:
+      - "8083:8080" # Проброс порта: хост:контейнер
+    environment:
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/postgres'
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'root'
+      SPRING_JPA_HIBERNATE_DDL_AUTO: 'update'
+networks:
+  kafka-network:
+    driver: bridge
+volumes:
+  db:
+    driver: local
+  kafka1:
+

@@ -1,0 +1,30 @@
+app:
+  kafka:
+    consumer:
+      topic-reply-registrator: ${KAFKA_CONSUMER_TOPIC_REPLY_REGISTRATOR:event-reply-generator-two}
+    producer:
+      topic-event-generator-two: ${KAFKA_PRODUCER_TOPIC_EVENT_GENERATOR_TWO:event-generator-two}
+spring:
+  application:
+    name: generatorTwo
+  datasource:
+    username: ${USER:root}
+    password: ${PASSWORD:root}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5433/postgres}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  kafka:
+    producer:
+      value-serializer: com.example.kafka.BaseDtoSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: generator-two
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    bootstrap-servers: localhost:9092
+server:
+  port: ${SERVICE_PORT:8080}

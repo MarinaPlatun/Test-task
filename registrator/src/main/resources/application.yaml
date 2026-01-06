@@ -1,0 +1,36 @@
+app:
+  kafka:
+    consumer:
+      topic-generator-one: ${KAFKA_CONSUMER_TOPIC_GENERATOR_ONE:event-generator-one}
+      topic-generator-two: ${KAFKA_CONSUMER_TOPIC_GENERATOR_TWO:event-generator-two}
+      max-poll-records: 3
+      poll-timeout: 10s
+    producer:
+      topic-reply-generator-one: ${KAFKA_PRODUCER_TOPIC_REPLY_GENERATOR_ONE:event-reply-generator-one}
+      topic-reply-generator-two: ${KAFKA_PRODUCER_TOPIC_REPLY_GENERATOR_TWO:event-reply-generator-two}
+spring:
+  application:
+    name: registrator
+  datasource:
+    username: ${USER:root}
+    password: ${PASSWORD:root}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5433/postgres}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      bootstrap-servers: ${KAFKA_CONSUMER_BOOTSTRAP_SERVERS:localhost:9092}
+      group-id: ${KAFKA_GROUP:registrator}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      value-serializer: com.example.kafka.BaseDtoSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+server:
+  port: ${SERVICE_PORT:8083}
