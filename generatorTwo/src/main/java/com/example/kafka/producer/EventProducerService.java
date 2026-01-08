@@ -41,7 +41,6 @@ public class EventProducerService {
   private EventType getTypeEvent() {
     Random rand = new Random();
     int randomNumber = rand.nextInt(3);
-    System.out.println("randomNumber =  " + randomNumber);
     return randomNumber == 1 ? EventType.SNOW : EventType.FOG;
   }
 }
