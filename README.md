@@ -13,6 +13,11 @@
 *   **База данных:** PostgreSQL
 *   **Инструменты:** Lombok, Spring Data JPA
 
+Проект должен целиком и полностью собирается и запускается при помощи docker compose:
+
+- `docker compose build`
+- `docker compose up`
+
 
 ### Примеры REST API (для HTTP)
 *   **Получить данные о количестве сгенерированных сообщений(allEvents), сколько из них обработано(confirmedEvents), а сколько нет(newEvents):
