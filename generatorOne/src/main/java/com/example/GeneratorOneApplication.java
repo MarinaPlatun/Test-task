@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableKafka
 public class GeneratorOneApplication {
 
 	public static void main(String[] args) {
