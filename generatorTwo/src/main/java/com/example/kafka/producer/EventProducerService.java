@@ -30,12 +30,12 @@ public class EventProducerService {
   @Value("${spring.application.name}")
   private String serviceName;
 
-  @Scheduled(fixedRate = 17000) // Каждые 17 секунд
+  @Scheduled(fixedRate = 4000) // Каждые 4 секунды
   public void generateAndPublishEvent() {
     Event event = new Event(NEW, getTypeEvent(), serviceName, new Date());
     Event saveEvent = eventRepository.save(event);
     kafkaTemplate.send("event-generator-two", String.valueOf(saveEvent.getId()), event);
-    log.info("Service {} generate and send message about evens '{}'", serviceName, event);
+    log.info("Service {} generate and send message about events '{}'", serviceName, event);
   }
 
   private EventType getTypeEvent() {

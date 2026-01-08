@@ -48,4 +48,15 @@ public class Event implements Serializable {
     this.creator = creator;
     this.createdBy = createdBy;
   }
+
+  @Override
+  public String toString() {
+    return "Event{" +
+        "id=" + id +
+        ", status=" + status +
+        ", eventType=" + eventType +
+        ", creator='" + creator + '\'' +
+        ", createdBy=" + createdBy +
+        '}';
+  }
 }
