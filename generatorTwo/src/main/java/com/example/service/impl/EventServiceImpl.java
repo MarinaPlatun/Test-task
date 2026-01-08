@@ -6,6 +6,8 @@ import com.example.model.StatusType;
 import com.example.repository.EventRepository;
 import com.example.service.EventService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,12 +15,17 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventServiceImpl implements EventService {
+
+  @Value("${spring.application.name}")
+  private String serviceName;
 
   private final EventRepository eventRepository;
 
   @Override
   public ActionResponse getAllEvents() {
+    log.info("Service {} return all events in status new and confirmed", serviceName);
     ActionResponse actionResponse = new ActionResponse();
     EventDto eventDto = new EventDto();
     Long allEvents = eventRepository.count();
