@@ -47,7 +47,7 @@ services:
     image: my-spring-generator-one/generator-one:latest # Имя образа
     container_name: generator-one-container
     ports:
-      - "8081:8080" # Проброс порта: хост:контейнер
+      - "8080:8080" # Проброс порта: хост:контейнер
     environment:
       SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/postgres'
@@ -62,7 +62,7 @@ services:
     image: my-spring-app/generator-two:latest # Имя образа
     container_name: generator-two-container
     ports:
-      - "8082:8080" # Проброс порта: хост:контейнер
+      - "8081:8080" # Проброс порта: хост:контейнер
     environment:
       SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/postgres'
@@ -77,7 +77,7 @@ services:
     image: my-spring-app/registrator:latest # Имя образа
     container_name: registrator-container
     ports:
-      - "8083:8080" # Проброс порта: хост:контейнер
+      - "8082:8080" # Проброс порта: хост:контейнер
     environment:
       SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/postgres'
