@@ -10,6 +10,8 @@ import com.example.service.RegistrationEventSpecifications;
 import com.example.service.RegistrationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,14 +23,19 @@ import org.springframework.util.CollectionUtils;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RegistrationServiceImpl implements RegistrationService {
 
   private final RegistrationRepository registrationRepository;
+
+  @Value("${spring.application.name}")
+  private String serviceName;
 
   @Override
   public SearchResponseDto<RegistrationEventDto> getAllRegistration(FilterDataDto filterDataDto,
                                                                     Pageable pageable) {
 
+    log.info("Service {} return all events by filter", serviceName);
     SearchResponseDto<RegistrationEventDto> searchResponseDto = new SearchResponseDto<>();
     Page<RegistrationEvent> registrationEvents;
     Specification<RegistrationEvent> spec = null;

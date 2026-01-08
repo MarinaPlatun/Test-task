@@ -22,8 +22,8 @@ spring:
     hibernate:
       ddl-auto: update
   kafka:
+    bootstrap-servers: localhost:9092
     consumer:
-      bootstrap-servers: ${KAFKA_CONSUMER_BOOTSTRAP_SERVERS:localhost:9092}
       group-id: ${KAFKA_GROUP:registrator}
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -31,6 +31,5 @@ spring:
     producer:
       value-serializer: com.example.kafka.BaseDtoSerializer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS:localhost:9092}
 server:
   port: ${SERVICE_PORT:8083}

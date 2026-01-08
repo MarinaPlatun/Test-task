@@ -29,6 +29,9 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 @EnableKafka
 public class KafkaConfig {
 
+  @Value("${spring.kafka.bootstrap-servers}")
+  private String bootstrapServers;
+
   @Bean("batchKafkaListenerContainerFactory")
   ConcurrentKafkaListenerContainerFactory<String, String> batchKafkaListenerContainerFactory(
       KafkaProperties properties,
@@ -45,7 +48,7 @@ public class KafkaConfig {
   private ConsumerFactory<String, String> consumerFactory(KafkaProperties.Consumer properties,
                                                           int maxPollRecords) {
     Map<String, Object> configProps = new HashMap<>();
-    configProps.put(BOOTSTRAP_SERVERS_CONFIG, properties.getBootstrapServers());
+    configProps.put(BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     configProps.put(GROUP_ID_CONFIG, properties.getGroupId());
     configProps.put(AUTO_OFFSET_RESET_CONFIG, properties.getAutoOffsetReset());
     configProps.put(MAX_POLL_RECORDS_CONFIG, maxPollRecords);
